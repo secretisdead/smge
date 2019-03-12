@@ -30,17 +30,17 @@ export class Smge {
 		}
 		//TODO listen for fullscreen key to manually toggle fullscreen?
 		this.updates = [
-		  //'engine_first',
-		  'input',
-		  //'early',
-		  'update',
-		  //'late',
-		  //'engine_last',
+			//'engine_first',
+			'input_update',
+			'early_update',
+			'update',
+			'late_update',
+			//'engine_last',
 		];
 		this.draws = [
-		  //'early',
-		  'draw',
-		  //'late_draw',
+			'early_draw',
+			'draw',
+			'late_draw',
 		];
 		// timestamps
 		this.start_time = 0;
