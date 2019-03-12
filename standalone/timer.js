@@ -19,7 +19,7 @@ export class Timer {
 			return;
 		}
 		if (delta > this.remaining) {
-			if (this.cb) {
+			if (this.cb && 'function' === typeof this.cb) {
 				this.cb();
 			}
 		}
