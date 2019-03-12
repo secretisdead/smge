@@ -82,7 +82,7 @@ export class Debug extends GameObject {
 			return;
 		}
 		// info
-		this.draw_screen_info();
+		this.draw_info();
 		// input
 		this.draw_input();
 		// fps
@@ -92,23 +92,6 @@ export class Debug extends GameObject {
 		// entities
 		this.draw_entities();
 	};
-	draw_screen_info() {
-		// screen info
-		this.smge.screen.buffer.ctx.fillStyle = this.colors.info;
-		this.smge.screen.buffer.ctx.font = this.fonts.info;
-		this.smge.screen.buffer.ctx.fillText(
-			'scale: '
-				+ parseFloat(
-					Math.round(this.smge.screen.scale.x * 100) / 100
-				).toFixed(2)
-				+ ', mode: '
-				+ this.smge.screen.mode
-				+ ', exact aspect: '
-				+ this.smge.screen.exact_aspect, 
-			4,
-			this.smge.screen.height - 4
-		);
-	}
 	draw_fps() {
 		this.smge.screen.buffer.ctx.fillStyle = this.colors.fps;
 		this.smge.screen.buffer.ctx.font = this.fonts.fps;
@@ -141,25 +124,40 @@ export class Debug extends GameObject {
 			origin.y - 4
 		);
 	}
-	draw_input() {
+	draw_info() {
 		if (!this.smge.input) {
 			return;
 		}
 		// trigger info
 		this.smge.screen.buffer.ctx.fillStyle = this.colors.info;
 		this.smge.screen.buffer.ctx.font = this.fonts.info;
-		var info = [
-			'toggle fullscreen: F11', 
-			'toggle entire client/exact multiple fit: \\', 
+		let info = [
+			'scale: '
+				+ parseFloat(
+					Math.round(this.smge.screen.scale.x * 100) / 100
+				).toFixed(2)
+				+ ', mode: '
+				+ this.smge.screen.mode
+				+ ', exact aspect: '
+				+ this.smge.screen.exact_aspect,
+			'timescale: '
+				+ parseFloat(
+					Math.round(this.smge.timescales.default.scale * 100) / 100
+				).toFixed(2),
+			'reset timescale: /',
+			'increase timescale: .',
+			'decrease timescale: ,',
 			'toggle debug: ' + this.toggle_key,
 		];
 		for (let i in info) {
 			this.smge.screen.buffer.ctx.fillText(
 				info[i],
 				4,
-				this.smge.screen.height - 4 - 12 - (i * 12)
+				this.smge.screen.height - 4 - (i * 12)
 			);
 		}
+	}
+	draw_input() {
 		//TODO draw mouse/keyboard/controller state here
 	}
 	draw_entity(entity) {
