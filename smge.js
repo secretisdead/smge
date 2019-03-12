@@ -10,6 +10,7 @@ import { Screen } from './screen.js';
 import { Input } from './input.js';
 import { EntityManager } from './entity_manager.js';
 import { ResourceManager } from './resource_manager.js';
+import { BoundManager } from './bound_manager.js';
 import { AudioPlayer } from './audio_player.js';
 
 export class Smge {
@@ -77,6 +78,8 @@ export class Smge {
 		this.entity_manager = new EntityManager(this);
 		// resource manager
 		this.resource_manager = new ResourceManager(this);
+		// bound manager
+		this.bound_manager = new BoundManager(this);
 		// audio player
 		this.audio = new AudioPlayer();
 	}
@@ -113,8 +116,11 @@ export class Smge {
 			}
 			this.waiting_actions = [];
 		}
-		// entities
+		// prune
 		this.entity_manager.prune();
+		// update bounds
+		this.bound_manager.update();
+		// update entities
 		this.entity_manager.update();
 	};
 	start() {
