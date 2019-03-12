@@ -161,11 +161,6 @@ export class Debug extends GameObject {
 		//TODO draw mouse/keyboard/controller state here
 	}
 	draw_entity(entity) {
-		if (entity.modules) {
-			for (let i in entity.modules) {
-				this.draw_entity(entity.modules[i]);
-			}
-		}
 		if (!entity.transform) {
 			return;
 		}
@@ -179,13 +174,9 @@ export class Debug extends GameObject {
 			4,
 			4
 		);
-		let id = entity.id;
-		if (-1 == id) {
-			id = 'module';
-		}
 		// coords and layer and depth
 		let info = [
-			id + (' ' + entity.name || ''),
+			(' ' + entity.name || ''),
 			'('
 				+ Math.round(entity.transform.x)
 				+ ', '
@@ -246,8 +237,8 @@ export class Debug extends GameObject {
 		// entity info font
 		this.smge.screen.buffer.ctx.font = this.fonts.info;
 		// entities
-		for (let id in this.smge.entity_manager.entities) {
-			this.draw_entity(this.smge.entity_manager.entities[id]);
+		for (let i in this.smge.entity_manager.ordered) {
+			this.draw_entity(this.smge.entity_manager.ordered[i]);
 		}
 	}
 }

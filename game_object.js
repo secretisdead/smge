@@ -2,7 +2,6 @@
 
 export class GameObject {
 	constructor(smge) {
-		this.id = -1;
 		this.smge = smge;
 		this.timescale = this.smge.timescales.default;
 		this.layer = 0;
@@ -31,76 +30,14 @@ export class GameObject {
 			delete this.modules[i];
 		}
 	}
-	input_update() {
-		for (let i in this.modules) {
-			if (
-					this.modules[i].input_update
-					&& 'function' === typeof this.modules[i].input_update
-				) {
-				this.modules[i].input_update();
-			}
-		}
-	}
-	early_update() {
-		for (let i in this.modules) {
-			if (
-					this.modules[i].early_update
-					&& 'function' === typeof this.modules[i].early_update
-				) {
-				this.modules[i].early_update();
-			}
-		}
-	}
-	update() {
-		for (let i in this.modules) {
-			if (
-					this.modules[i].update
-					&& 'function' === typeof this.modules[i].update
-				) {
-				this.modules[i].update();
-			}
-		}
-	}
-	late_update() {
-		for (let i in this.modules) {
-			if (
-					this.modules[i].late_update
-					&& 'function' === typeof this.modules[i].late_update
-				) {
-				this.modules[i].late_update();
-			}
-		}
-	}
-	early_draw() {
-		for (let i in this.modules) {
-			if (
-					this.modules[i].early_draw
-					&& 'function' === typeof this.modules[i].early_draw
-				) {
-				this.modules[i].early_draw();
-			}
-		}
-	}
-	draw() {
-		for (let i in this.modules) {
-			if (
-					this.modules[i].draw
-					&& 'function' === typeof this.modules[i].draw
-				) {
-				this.modules[i].draw();
-			}
-		}
-	}
-	late_draw() {
-		for (let i in this.modules) {
-			if (
-					this.modules[i].late_draw
-					&& 'function' === typeof this.modules[i].late_draw
-				) {
-				this.modules[i].late_draw();
-			}
-		}
-	}
+	input_update() {}
+	early_update() {}
+	update() {}
+	late_update() {}
+	early_draw() {}
+	draw() {}
+	late_draw() {}
+	
 	add_module(module) {
 		this.modules.push(module);
 		module.parent = this;

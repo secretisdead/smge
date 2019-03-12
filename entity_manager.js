@@ -5,14 +5,14 @@ export class EntityManager {
 		console.log('instantiating EntityManager');
 		this.smge = smge;
 		this.count = 0;
-		this.entities = {};
+		this.entities = [];
 		this.tags = {};
 		this.to_prune = [];
 	}
 	prune() {
-		for (let id in this.entities) {
-			if (this.entities[id].prune) {
-				this.remove(id);
+		for (let i in this.ordered) {
+			if (this.ordered[i].prune) {
+				this.remove(this.ordered[i]);
 			}
 		}
 	}
@@ -23,15 +23,12 @@ export class EntityManager {
 		for (let i in this.smge.updates) {
 			let update = this.smge.updates[i];
 			for (let j in this.ordered) {
-				let id = this.ordered[j];
-				if (!this.entities[id]) {
-					continue;
-				}
+				let entity = this.ordered[j];
 				if (
-						this.entities[id][update]
-						&& 'function' === typeof this.entities[id][update]
+						entity[update]
+						&& 'function' === typeof entity[update]
 					) {
-					this.entities[id][update]();
+					entity[update]();
 				}
 			}
 		}
@@ -41,15 +38,12 @@ export class EntityManager {
 		for (let i in this.smge.draws) {
 			let draw = this.smge.draws[i];
 			for (let j in this.ordered) {
-				let id = this.ordered[j];
-				if (!this.entities[id]) {
-					continue;
-				}
+				let entity = this.ordered[j];
 				if (
-						this.entities[id][draw]
-						&& 'function' === typeof this.entities[id][draw]
+						entity[draw]
+						&& 'function' === typeof entity[draw]
 					) {
-					this.entities[id][draw]();
+					entity[draw]();
 				}
 			}
 		}
@@ -72,28 +66,27 @@ export class EntityManager {
 		}
 		return entity;
 	}
-	remove(id) {
+	remove(entity) {
 		if (0 == this.entities.length) {
 			return;
 		}
 		if (
-				this.entities[id].remove
-				&& 'function' === typeof this.entities[id].remove
+				entity.remove
+				&& 'function' === typeof entity.remove
 			) {
-			this.entities[id].remove();
+			entity.remove();
 		}
 		// remove from main
-		delete this.entities[id];
+		let index = this.entities.indexOf(entity);
+		delete this.entities[index];
 		// remove from ordered
-		let index = this.ordered.indexOf(id);
+		index = this.ordered.indexOf(entity);
 		if (-1 != index) {
 			this.ordered.splice(index, 1);
 		}
-		//TODO should this force order change?
-		this.order_change = true;
 		// check if entity exists in any tag
 		for (let tag in this.tags) {
-			let index = this.tags[tag].indexOf(id);
+			let index = this.tags[tag].indexOf(entity);
 			// remove from tags
 			if (-1 == index) {
 				continue;
@@ -113,21 +106,35 @@ export class EntityManager {
 			delete this.tags[tag];
 		}
 	}
+	order_entity(entity, layers, layer, depth) {
+		layer += entity.layer || 0;
+		depth += entity.depth || 0;
+		// layer of this entity not yet in layers object
+		if (!layers[layer]) {
+			layers[layer] = {};
+		}
+		// depth of this entity not yet in layer depth object
+		if (!layers[layer][depth]) {
+			layers[layer][depth] = [];
+		}
+		layers[layer][depth].push(entity);
+		if (entity.modules) {
+			for (let i in entity.modules) {
+				layers = this.order_entity(
+					entity.modules[i],
+					layers,
+					layer,
+					depth
+				);
+			}
+		}
+		return layers;
+	}
 	sort() {
 		let layers = {};
 		let depths = {};
-		for (let id in this.entities) {
-			let current_layer = this.entities[id].layer || 0;
-			let current_depth = this.entities[id].depth || 0;
-			// layer of this entity not yet in layers object
-			if (!layers[current_layer]) {
-				layers[current_layer] = {};
-			}
-			// depth of this entity not yet in layer depth object
-			if (!layers[current_layer][current_depth]) {
-				layers[current_layer][current_depth] = [];
-			}
-			layers[current_layer][current_depth].push(id);
+		for (let i in this.entities) {
+			layers = this.order_entity(this.entities[i], layers, 0, 0);
 		}
 		let layer_keys = Object.keys(layers);
 		layer_keys.sort(function(a, b) {
