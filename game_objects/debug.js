@@ -16,9 +16,9 @@ export class Debug extends GameObject {
 			transform: '#ff8000',
 			sprite: '#00ffff',
 			bound: '#808080',
-			boundOn: '#0000ff',
-			boundOff: '#ff0000',
-			boundDuring: '#ffffff',
+			bound_on: '#0000ff',
+			bound_off: '#ff0000',
+			bound_during: '#ffffff',
 		};
 		this.fonts = {
 			fps: '20px Tahoma',
