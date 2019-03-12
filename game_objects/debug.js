@@ -194,6 +194,16 @@ export class Debug extends GameObject {
 				transform.y + 8 + (i * 12)
 			);
 		}
+		// sprite box
+		if (entity.sprite) {
+			this.smge.screen.buffer.ctx.strokeStyle = this.colors.sprite;
+			this.smge.screen.buffer.ctx.strokeRect(
+				transform.x - (entity.sprite.origin.x * entity.transform.scale.x) - 1,
+				transform.y - (entity.sprite.origin.y * entity.transform.scale.y) - 1,
+				entity.sprite.width * entity.transform.scale.x + 2,
+				entity.sprite.height * entity.transform.scale.y + 2
+			);
+		}
 		// bounding boxes
 		if (entity.bounds) {
 			// for all bounds
@@ -221,16 +231,6 @@ export class Debug extends GameObject {
 					//bound.height * transform.scale.y
 				);
 			}
-		}
-		// sprite box
-		if (entity.sprite) {
-			this.smge.screen.buffer.ctx.strokeStyle = this.colors.sprite;
-			this.smge.screen.buffer.ctx.strokeRect(
-				transform.x - (entity.sprite.origin.x * entity.transform.scale.x),
-				transform.y - (entity.sprite.origin.y * entity.transform.scale.y),
-				entity.sprite.width * entity.transform.scale.x,
-				entity.sprite.height * entity.transform.scale.y
-			);
 		}
 	}
 	draw_entities() {
