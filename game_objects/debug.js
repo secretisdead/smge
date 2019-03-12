@@ -33,40 +33,37 @@ export class Debug extends GameObject {
 			current: 0,
 			show: false,
 		};
-		//TODO use input manager for this
-		document.addEventListener('keydown', e => {
-			if (this.toggle_key == e.key) {
-				this.enabled = !this.enabled;
-			}
-			this.smge.measure_fps = this.enabled;
-		});
 	}
 	start() {
 		super.start();
 		this.fps.last = this.smge.runtime;
 	}
-	/** /
 	input_update() {
-		//check input for debug toggle
-		if (this.input)
-		{
-			if (this.input.pressed(this.trigger))
-			{
-				this.show = !this.show;
-			}
-			if (this.input.pressed('\\'))
-			{
-				this.screen.exactAspect = !this.screen.exactAspect;
-				Smge.resize(
-					this.screen.width, 
-					this.screen.height, 
-					this.screen.mode, 
-					this.screen.scale
-				);
-			}
+		// check input for debug toggle
+		if (this.smge.input.pressed(this.toggle_key)) {
+			this.enabled = !this.enabled;
 		}
+		if (this.smge.input.down(',')) {
+			this.smge.timescales.default.scale -= 0.01;
+		}
+		if (this.smge.input.down('.')) {
+			this.smge.timescales.default.scale += 0.01;
+		}
+		if (this.smge.input.down('/')) {
+			this.smge.timescales.default.scale = 1;
+		}
+		/** /
+		if (this.smge.input.pressed('\\')) {
+			this.smge.screen.exact_aspect = !this.smge.screen.exact_aspect;
+			this.smge.screen.resize(
+				this.smge.screen.width,
+				this.smge.screen.height,
+				this.smge.screen.mode,
+				this.smge.screen.scale
+			);
+		}
+		/**/
 	}
-	/**/
 	update() {
 		if (!this.enabled) {
 			return;
