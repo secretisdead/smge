@@ -10,7 +10,7 @@
 import { Transform } from './transform.js';
 import { Timer } from '../standalone/timer.js';
 
-export class Shake {
+export class Shaker {
 	constructor() {
 		this.intensity = 0;
 		this.half_intensity = 0;
@@ -29,7 +29,7 @@ export class Shake {
 		/**/
 	}
 	on_added() {
-		this.parent.shake = this.shake;
+		this.parent.shaker = this;
 		if (!this.parent.transform) {
 			this.parent.add_module(new Transform());
 		}
