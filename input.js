@@ -114,7 +114,7 @@ export class Input {
 			if (!this.attached) {
 				return;
 			}
-			//skip if pointer is locked
+			// skip if pointer is locked
 			if (
 				document.pointerLockElement === this.screen.display.canvas
 				|| document.webkitPointerLockElement === this.screen.display.canvas
