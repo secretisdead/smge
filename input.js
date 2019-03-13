@@ -54,7 +54,7 @@ export class Input {
 			if (!this.attached) {
 				return;
 			}
-			let button = 'm' + e.which;
+			let button = 'm' + (e.button + 1);
 			if (-1 == this.state.current.indexOf(button)
 			) {
 				this.state.current.push(button);
@@ -64,7 +64,7 @@ export class Input {
 			if (!this.attached) {
 				return;
 			}
-			let button = 'm' + e.which;
+			let button = 'm' + (e.button + 1);
 			let index = this.state.current.indexOf(button);
 			if (-1 != index) {
 				this.state.current.splice(index, 1);
