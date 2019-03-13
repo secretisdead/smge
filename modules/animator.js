@@ -23,7 +23,7 @@ export class Animator {
 			this.parent.add_module(new Sprite);
 		}
 	}
-	update = function() {
+	update() {
 		if (
 			this.paused
 			|| 0 == this.loops
