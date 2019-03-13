@@ -10,6 +10,13 @@
 import { Transform } from './transform.js';
 import { Timer } from '../standalone/timer.js';
 
+export function randsign() {
+	if (0.5 > Math.random()) {
+		return -1;
+	}
+	return 1
+}
+
 export class Shaker {
 	constructor() {
 		this.intensity = 0;
@@ -54,20 +61,14 @@ export class Shaker {
 			this.delta = 0;
 			this.real.x = this.parent.transform.x;
 			this.real.y = this.parent.transform.y;
-			let x_modifier = 1;
-			if (Math.round(Math.random())) {
-				x_modifier = -1;
-			}
-			let y_modifier = 1;
-			if (Math.round(Math.random())) {
-				y_modifier = -1;
-			}
-			this.parent.transform.x = this.real.x += (
-				this.intensity * this.timer.percent.remaining * Math.random() * x_modifier
-			) + this.half_intensity * this.timer.percent.remaining;
-			this.parent.transform.y = this.real.y += (
-				this.intensity * this.timer.percent.remaining * Math.random() * y_modifier
-			) + this.half_intensity * this.timer.percent.remaining;
+			let max = this.intensity * this.timer.percent.remaining;
+			let min = this.half_intensity * this.timer.percent.remaining;
+			this.parent.transform.x = this.real.x + (
+				(max * Math.random()) + min * randsign()
+			);
+			this.parent.transform.y = this.real.y + (
+				(max * Math.random()) + min * randsign()
+			);
 			/** /
 			this.last.x = this.parent.transform.x;
 			this.last.y = this.parent.transform.y;
