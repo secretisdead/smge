@@ -13,7 +13,7 @@ export class Timer {
 		this.set(duration, cb);
 	}
 	// fire cb once this frame if delta is greater than remaining
-	check = function(delta) {
+	check(delta) {
 		// console.log('timer check');
 		if (this.stopped) {
 			return;
