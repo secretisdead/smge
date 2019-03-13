@@ -24,6 +24,8 @@ export class Input {
 				y: 0,
 			},
 		};
+		this.accumulated_mousewheel = 0;
+		this.mousewheel = 0;
 		this.attached = true;
 		this.state = {
 			pressed: [], // buttons pressed this frame
@@ -69,6 +71,12 @@ export class Input {
 			if (-1 != index) {
 				this.state.current.splice(index, 1);
 			}
+		});
+		document.addEventListener('wheel', e => {
+			if (!this.attached) {
+				return;
+			}
+			this.accumulated_mousewheel += Math.sign(e.deltaY);
 		});
 		this.screen.display.canvas.addEventListener('mousemove', e => {
 			if (!this.attached) {
@@ -227,5 +235,7 @@ export class Input {
 		// console.log('screen offset: ' + this.screen.offset.x + ',' + this.screen.offset.y);
 		this.cursor.world.x = this.cursor.screen.x + this.screen.offset.x;
 		this.cursor.world.y = this.cursor.screen.y + this.screen.offset.y;
+		this.mousewheel = this.accumulated_mousewheel;
+		this.accumulated_mousewheel = 0;
 	}
 }
