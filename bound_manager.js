@@ -32,6 +32,10 @@ export class Bound {
 		this.last = {
 			x: null,
 			y: null,
+			parallax: {
+				x: null,
+				y: null,
+			},
 			scale: {
 				x: null,
 				y: null,
@@ -56,6 +60,10 @@ export class Bound {
 export class BoundManager {
 	constructor(smge) {
 		this.smge = smge;
+		this.last_screen_offset = {
+			x: this.smge.screen.offset.x,
+			y: this.smge.screen.offset.y,
+		};
 	}
 	intersect(r1, r2) {
 		return !(
@@ -84,10 +92,22 @@ export class BoundManager {
 				&& bound.parent.transform.y == bound.last.y
 				&& bound.parent.transform.scale.x == bound.last.scale.x
 				&& bound.parent.transform.scale.y == bound.last.scale.y
+				&& bound.parent.transform.parallax.x == bound.last.parallax.x
+				&& bound.parent.transform.parallax.y == bound.last.parallax.y
 				&& bound.offset.x == bound.last.offset.x
 				&& bound.offset.y == bound.last.offset.y
 				&& bound.width == bound.last.width
 				&& bound.height == bound.last.height
+				&& (
+					(
+						0 != bound.parent.transform.parallax.x
+						&& 0 != bound.parent.transform.parallax.y
+					)
+					|| (
+						this.smge.screen.offset.x == this.last_screen_offset.x
+						&& this.smge.screen.offset.y == this.last_screen_offset.y
+					)
+				)
 			) {
 				bound.unchanged = true;
 				continue;
@@ -98,18 +118,33 @@ export class BoundManager {
 			bound.last.y = bound.parent.transform.y;
 			bound.last.scale.x = bound.parent.transform.scale.x;
 			bound.last.scale.y = bound.parent.transform.scale.y;
+			bound.last.parallax.x = bound.parent.transform.parallax.x;
+			bound.last.parallax.y = bound.parent.transform.parallax.y;
 			bound.last.offset.x = bound.offset.x;
 			bound.last.offset.y = bound.offset.y;
 			bound.last.width = bound.width;
 			bound.last.height = bound.height;
 			// update rect
-			bound.rect.left = bound.parent.transform.x + (
+			let x = bound.parent.transform.x;
+			let y = bound.parent.transform.y;
+			if (
+				0 == bound.parent.transform.parallax.x
+				&& 0 == bound.parent.transform.parallax.y
+			) {
+				let world_pos = bound.parent.smge.screen.screen_to_world({
+					x: x,
+					y: y,
+				});
+				x = world_pos.x;
+				y = world_pos.y;
+			}
+			bound.rect.left = x + (
 				bound.offset.x * bound.parent.transform.scale.x
 			);
 			bound.rect.right = bound.rect.left + (
 				bound.width * bound.parent.transform.scale.x
 			);
-			bound.rect.top = bound.parent.transform.y + (
+			bound.rect.top = y + (
 				bound.offset.y * bound.parent.transform.scale.y
 			);
 			bound.rect.bottom = bound.rect.top + (
@@ -167,6 +202,12 @@ export class BoundManager {
 				// remove from on
 				bound1.on.splice(index, 1);
 			}
+		}
+		if (this.last_screen_offset.x != this.smge.screen.offset.x) {
+			this.last_screen_offset.x = this.smge.screen.offset.x;
+		}
+		if (this.last_screen_offset.y != this.smge.screen.offset.y) {
+			this.last_screen_offset.y = this.smge.screen.offset.y;
 		}
 	}
 	check(bound, state, check_id) {
