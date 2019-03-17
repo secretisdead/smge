@@ -7,6 +7,8 @@ export class Scene extends GameObject {
 	constructor(smge, options) {
 		super(smge);
 		this.source_object = options.source_object || null;
+		this.disable_source_object = options.disable_source_object || false;
+		this.remove_source_object = options.remove_source_object || false;
 		this.cover_color = options.cover_color || '#000000';
 		this.cover_type_in = options.cover_type_in || 'cut';
 		this.cover_duration_in = options.cover_duration_in || '1';
@@ -28,8 +30,13 @@ export class Scene extends GameObject {
 			// after cover is in set ready to compose
 			() => {
 				if (this.source_object) {
-					this.smge.entity_manager.remove(this.source_object);
-					this.source_object = null;
+					if (this.disable_source_object) {
+						this.source_object.disable();
+					}
+					if (this.remove_source_object) {
+						this.smge.entity_manager.remove(this.source_object);
+						this.source_object = null;
+					}
 				}
 				this.compose_ready = true;
 			}
