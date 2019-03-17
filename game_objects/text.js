@@ -136,8 +136,14 @@ export class Text extends GameObject {
 				this.add_module(glyph);
 			}
 			// previous glyph at this index being changed
-			else if (current_glyph != this.glyphs[index].glyph) {
-				this.glyphs[index].prune = true;
+			else if (
+					current_glyph != this.glyphs[index].glyph
+					|| color != this.glyphs[index].color
+					|| effect != this.glyphs[index].effect
+					|| intensity != this.glyphs[index].intensity
+					|| frequency != this.glyphs[index].frequency
+				) {
+				let old_glyph = this.glyphs[index];
 				let glyph = new Glyph(
 					current_glyph,
 					line,
@@ -149,6 +155,11 @@ export class Text extends GameObject {
 					frequency
 				);
 				this.glyphs[index] = glyph;
+				// inherit position data from old glyph
+				this.glyphs[index].x = old_glyph.x;
+				this.glyphs[index].y = old_glyph.y;
+				this.glyphs[index].last = old_glyph.last;
+				this.remove_module(old_glyph);
 				this.add_module(glyph);
 			}
 			// previous glyph at this index staying the same
