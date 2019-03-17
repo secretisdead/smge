@@ -222,15 +222,15 @@ export class Screen {
 	};
 	wipe() {
 		this.buffer.ctx.clearRect(
-			0, 
-			0, 
-			this.buffer.canvas.width, 
+			0,
+			0,
+			this.buffer.canvas.width,
 			this.buffer.canvas.height
 		);
 		this.display.ctx.clearRect(
-			0, 
-			0, 
-			this.display.canvas.width, 
+			0,
+			0,
+			this.display.canvas.width,
 			this.display.canvas.height
 		);
 	};
