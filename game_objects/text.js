@@ -171,8 +171,7 @@ export class Text extends GameObject {
 		// remove spacing from end of line
 		line_width -= this.font.spacing.x;
 		// get total width and height
-		//TODO max
-		this.width = (line_width > long_width ? line_width : long_width);
+		this.width = Math.max(line_width, long_width);
 		this.height = (line + 1) * (
 			this.font.height + this.font.spacing.y
 		) - this.font.spacing.y;
