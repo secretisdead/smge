@@ -30,6 +30,24 @@ export class Timer {
 		this.percent.remaining = this.remaining / this.duration;
 		this.percent.complete = 1 - this.percent.remaining;
 	}
+	check_stop(delta) {
+		if (this.stopped) {
+			return;
+		}
+		if (delta > this.remaining) {
+			if (this.cb && 'function' === typeof this.cb) {
+				this.cb();
+				this.stop();
+				return;
+			}
+		}
+		if (this.stopped) {
+			return;
+		}
+		this.remaining -= delta;
+		this.percent.remaining = this.remaining / this.duration;
+		this.percent.complete = 1 - this.percent.remaining;
+	}
 	// fire cb for each time that duration would've elapsed during delta time
 	multi_check(delta) {
 		// console.log('timer multicheck');
