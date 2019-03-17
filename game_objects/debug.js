@@ -81,6 +81,7 @@ export class Debug extends GameObject {
 		if (!this.enabled) {
 			return;
 		}
+		this.smge.screen.buffer.ctx.lineWidth = 1;
 		// info
 		this.draw_info();
 		// input
