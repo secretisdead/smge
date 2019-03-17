@@ -64,10 +64,10 @@ export class Shaker {
 			let max = this.intensity * this.timer.percent.remaining;
 			let min = this.half_intensity * this.timer.percent.remaining;
 			this.parent.transform.x = this.real.x + (
-				(max * Math.random()) + min * randsign()
+				randsign() * ((max * Math.random()) + min)
 			);
 			this.parent.transform.y = this.real.y + (
-				(max * Math.random()) + min * randsign()
+				randsign() * ((max * Math.random()) + min)
 			);
 			/** /
 			this.last.x = this.parent.transform.x;
