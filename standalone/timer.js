@@ -42,6 +42,10 @@ export class Timer {
 			if (this.cb && 'function' === typeof this.cb) {
 				this.cb(this);
 			}
+			if (0 == this.duration) {
+				console.log('duration 0, preventing infinite loop');
+				break;
+			}
 			this.remaining += this.duration;
 		}
 		if (this.stopped) {
