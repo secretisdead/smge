@@ -4,7 +4,7 @@ export class GameObject {
 	constructor(smge) {
 		this.smge = smge;
 		this.timescale = this.smge.timescales.default;
-		this.enabled = true;
+		this.disabled = false;
 		this.layer = 0;
 		this.depth = 0;
 		this.modules = [];
@@ -58,15 +58,15 @@ export class GameObject {
 		this.smge.entity_manager.order_change = true;
 	}
 	disable() {
-		this.enabled = false;
+		this.disabled = true;
 		this.smge.entity_manager.order_change = true;
 	}
 	enable() {
-		this.enabled = true;
+		this.disabled = false;
 		this.smge.entity_manager.order_change = true;
 	}
-	toggle() {
-		this.enabled = !this.enabled;
+	toggle_disabled() {
+		this.disabled = !this.disabled;
 		this.smge.entity_manager.order_change = true;
 	}
 }

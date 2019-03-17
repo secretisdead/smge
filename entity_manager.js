@@ -112,7 +112,7 @@ export class EntityManager {
 		}
 	}
 	order_entity(entity, layers, layer, depth) {
-		if (!entity.enabled) {
+		if (entity.disabled) {
 			return layers;
 		}
 		layer += entity.layer || 0;
