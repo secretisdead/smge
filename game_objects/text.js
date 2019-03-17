@@ -53,6 +53,9 @@ export class Text extends GameObject {
 		this.direction = 0;
 		this.set_text(text);
 	}
+	refresh() {
+		this.set_text(this.text);
+	}
 	set_text(text) {
 		this.text = text;
 		this.width = 0;
