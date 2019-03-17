@@ -82,6 +82,8 @@ export class Smge {
 		this.bound_manager = new BoundManager(this);
 		// audio player
 		this.audio = new AudioPlayer();
+		// a standard place for user globals
+		this.g = {};
 	}
 	set_fps(fps) {
 		this.target_fps = fps;
