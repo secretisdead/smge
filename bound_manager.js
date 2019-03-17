@@ -49,7 +49,7 @@ export class Bound {
 			type: null,
 		};
 	}
-	on_added() {
+	on_add() {
 		if (!this.parent.bounds) {
 			this.parent.bounds = [];
 		}
