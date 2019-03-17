@@ -112,6 +112,9 @@ export class EntityManager {
 		}
 	}
 	order_entity(entity, layers, layer, depth) {
+		if (entity.suspended) {
+			return layers;
+		}
 		layer += entity.layer || 0;
 		depth += entity.depth || 0;
 		// layer of this entity not yet in layers object

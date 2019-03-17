@@ -4,6 +4,7 @@ export class GameObject {
 	constructor(smge) {
 		this.smge = smge;
 		this.timescale = this.smge.timescales.default;
+		this.suspended = false;
 		this.layer = 0;
 		this.depth = 0;
 		this.modules = [];
@@ -54,6 +55,18 @@ export class GameObject {
 	}
 	change_depth(depth) {
 		this.depth = depth;
+		this.smge.entity_manager.order_change = true;
+	}
+	suspend() {
+		this.suspended = true;
+		this.smge.entity_manager.order_change = true;
+	}
+	unsuspend() {
+		this.suspended = false;
+		this.smge.entity_manager.order_change = true;
+	}
+	toggle_suspend() {
+		this.suspended = !this.suspended;
 		this.smge.entity_manager.order_change = true;
 	}
 }
