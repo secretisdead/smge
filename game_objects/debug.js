@@ -133,6 +133,7 @@ export class Debug extends GameObject {
 		this.smge.screen.buffer.ctx.fillStyle = this.colors.info;
 		this.smge.screen.buffer.ctx.font = this.fonts.info;
 		let info = [
+			'entities: ' + this.smge.entity_manager.ordered.length,
 			'scale: '
 				+ parseFloat(
 					Math.round(this.smge.screen.scale.x * 100) / 100
