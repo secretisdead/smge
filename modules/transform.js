@@ -30,12 +30,10 @@ export class Transform {
 		};
 	}
 	apply_velocity() {
-		if (0 != this.acceleration.x)
-		{
+		if (0 != this.acceleration.x) {
 			this.velocity.x += (this.acceleration.x * this.parent.timescale.delta);
 		}
-		if (0 != this.acceleration.y)
-		{
+		if (0 != this.acceleration.y) {
 			this.velocity.y += (this.acceleration.y * this.parent.timescale.delta);
 		}
 		if (
