@@ -223,10 +223,10 @@ export class Debug extends GameObject {
 				}
 				this.smge.screen.buffer.ctx.strokeStyle = bound_color;
 				this.smge.screen.buffer.ctx.strokeRect(
-					transform.x + (bound.offset.x),
-					transform.y + (bound.offset.y),
-					bound.width,
-					bound.height
+					transform.x + (bound.offset.x * entity.transform.scale.x),
+					transform.y + (bound.offset.y * entity.transform.scale.y),
+					bound.width * entity.transform.scale.x,
+					bound.height * entity.transform.scale.y
 					//transform.x + (bound.offset.x * transform.scale.x),
 					//transform.y + (bound.offset.y * transform.scale.y),
 					//bound.width * transform.scale.x,
