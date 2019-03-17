@@ -7,13 +7,21 @@ export class EntityManager {
 		this.count = 0;
 		this.entities = [];
 		this.tags = {};
-		this.to_prune = [];
 	}
 	prune() {
+		let to_prune = [];
 		for (let i in this.ordered) {
 			if (this.ordered[i].prune) {
-				this.remove(this.ordered[i]);
+				to_prune.push(this.ordered[i].prune);
 			}
+		}
+		for (let i in to_prune) {
+			// remove from parent modules
+			if (to_prune[i].parent) {
+				to_prune[i].parent.remove_module(to_prune[i]);
+			}
+			// remove from root entities
+			this.remove(to_prune[i]);
 		}
 	}
 	update() {
@@ -52,17 +60,17 @@ export class EntityManager {
 	add(entity, tag) {
 		this.count += 1;
 		entity.id = this.count;
-		this.entities[entity.id] = entity;
+		this.entities.push(entity);
 		// console.log('new ' + entity.constructor.name + ' entity: ' + entity.id + ('undefined' != typeof entity.name ? ' (' + entity.name + ')' : ''));
 		if (tag) {
 			if (!this.tags[tag]) {
 				this.tags[tag] = [];
 			}
-			this.tags[tag].push(entity.id);
+			this.tags[tag].push(entity);
 		}
 		this.order_change = true;
-		if (entity.start && 'function' === typeof entity.start) {
-			entity.start();
+		if (entity.on_add && 'function' === typeof entity.on_add) {
+			entity.on_add();
 		}
 		return entity;
 	}
@@ -70,11 +78,8 @@ export class EntityManager {
 		if (0 == this.entities.length) {
 			return;
 		}
-		if (
-				entity.remove
-				&& 'function' === typeof entity.remove
-			) {
-			entity.remove();
+		if (entity.on_remove && 'function' === typeof entity.on_remove) {
+			entity.on_remove();
 		}
 		// remove from main
 		let index = this.entities.indexOf(entity);

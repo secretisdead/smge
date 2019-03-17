@@ -35,7 +35,7 @@ export class Shaker {
 		this.delta = 0;
 		/**/
 	}
-	on_added() {
+	on_add() {
 		this.parent.shaker = this;
 		if (!this.parent.transform) {
 			this.parent.add_module(new Transform());

@@ -16,7 +16,7 @@ export class Animator {
 		this.events = {};
 		this.load(imagesheet, animation_recipe);
 	}
-	on_added() {
+	on_add() {
 		this.parent.animator = this;
 		this.timer.remaining = this.frames[this.current].duration;
 		if (!this.parent.sprite) {

@@ -69,7 +69,7 @@ export class Transform {
 			}
 		}
 	}
-	on_added() {
+	on_add() {
 		this.parent.transform = this;
 	}
 	normalize(velocity) {

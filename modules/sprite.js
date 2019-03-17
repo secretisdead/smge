@@ -21,7 +21,7 @@ export class Sprite {
 			this.offset.y = offset_y;
 		}
 	}
-	on_added() {
+	on_add() {
 		this.parent.sprite = this;
 		if (!this.parent.transform) {
 			this.parent.add_module(new Transform);

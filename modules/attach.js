@@ -20,7 +20,7 @@ export class Attach {
 			y: null,
 		};
 	}
-	on_added() {
+	on_add() {
 		this.parent.follow = this;
 		if (!this.parent.transform) {
 			this.parent.add_module(new Transform);

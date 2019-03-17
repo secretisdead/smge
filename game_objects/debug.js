@@ -34,8 +34,8 @@ export class Debug extends GameObject {
 			show: false,
 		};
 	}
-	start() {
-		super.start();
+	on_add() {
+		super.on_add();
 		this.fps.last = this.smge.runtime;
 	}
 	input_update() {

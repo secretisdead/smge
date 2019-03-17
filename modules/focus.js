@@ -19,7 +19,7 @@ export class Focus {
 			y: null,
 		};
 	}
-	on_added() {
+	on_add() {
 		this.parent.focus = this.focus.bind(this);
 		if (!this.parent.transform) {
 			this.parent.add_module(new Transform);
