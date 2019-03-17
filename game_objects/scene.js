@@ -56,7 +56,7 @@ export class Scene extends GameObject {
 			);
 			return;
 		}
-		setTimeout(() => {
+		this.smge.add_waiting_action(() => {
 			this.cover.out(
 				this.cover_type_out,
 				this.cover_duration_out,
