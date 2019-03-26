@@ -29,7 +29,8 @@ export class ParticleEmitter extends GameObject {
 		this.generate_particle = generate_particle || false;
 		this.activated = false;
 		this.count = 0;
-		this.particles = [];
+		this.particles = new GameObject(this.smge);
+		this.add_module(this.particles);
 		this.add_module(new Transform());
 		this.timer = new Timer(this.frequency, () => {
 			this.emit();
@@ -41,9 +42,8 @@ export class ParticleEmitter extends GameObject {
 		parallax_x = parallax_x || this.transform.parallax.x;
 		parallax_y = parallax_y || this.transform.parallax.y;
 		// prune oldest particles
-		while (this.count >= this.max_particles) {
-			// console.log('marking oldest particle for removal');
-			this.remove_particle(this.particles[0]);
+		while (this.particles.modules.length >= this.max_particles) {
+			this.particles.remove_module(this.particles.modules[0]);
 		}
 		// console.log('emitting particle');
 		let direction = this.direction;
@@ -58,7 +58,6 @@ export class ParticleEmitter extends GameObject {
 		else {
 			p = new Particle(this.smge);
 		}
-		p.emitter = this;
 		p.lifetime = this.particle_lifetime;
 		p.timescale = this.timescale;
 		p.layer = this.layer;
@@ -69,15 +68,8 @@ export class ParticleEmitter extends GameObject {
 		p.transform.parallax.y = parallax_y;
 		p.transform.velocity.x = Math.cos(direction) * this.particle_speed;
 		p.transform.velocity.y = Math.sin(direction) * this.particle_speed;
-		this.particles.push(p);
-		this.count += 1;
-		this.smge.entity_manager.add(p);
+		this.particles.add_module(p);
 		return p;
-	}
-	remove_particle(p) {
-		this.particles.splice(this.particles.indexOf(p), 1);
-		this.count -= 1;
-		p.prune = true;
 	}
 	activate() {
 		this.activated = true;
@@ -89,12 +81,16 @@ export class ParticleEmitter extends GameObject {
 		this.activated = false;
 		this.timer.stop();
 	}
-	early_update() {
-		super.early_update();
+	update() {
+		super.update();
 		if (!this.activated) {
 			return;
 		}
 		this.timer.multi_check(this.timescale.delta);
+	}
+	disable() {
+		this.deactivate();
+		super.disable();
 	}
 }
 
@@ -107,7 +103,7 @@ export class Particle extends GameObject {
 		super.early_update();
 		this.lifetime -= this.timescale.delta;
 		if (0 >= this.lifetime) {
-			this.emitter.remove_particle(this);
+			this.parent.remove_module(this);
 		}
 	}
 	update() {
