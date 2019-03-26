@@ -9,13 +9,7 @@
 
 import { Transform } from './transform.js';
 import { Timer } from '../standalone/timer.js';
-
-export function randsign() {
-	if (0.5 > Math.random()) {
-		return -1;
-	}
-	return 1
-}
+import { randsign } from '../lib/randsign.js';
 
 export class Shaker {
 	constructor() {

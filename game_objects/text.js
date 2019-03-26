@@ -3,7 +3,7 @@
 import { GameObject } from '../game_object.js';
 import { Transform } from '../modules/transform.js';
 import { Sprite } from '../modules/sprite.js';
-import { randsign } from '../modules/shaker.js';
+import { randsign } from '../lib/randsign.js';
 
 export class Text extends GameObject {
 	constructor(
