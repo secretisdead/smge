@@ -82,6 +82,8 @@ export class Smge {
 		this.bound_manager = new BoundManager(this);
 		// audio player
 		this.audio = new AudioPlayer();
+		// for initialization, especially when click to start is enabled
+		this.on_start = null;
 		// a standard place for user globals
 		this.g = {};
 	}
@@ -163,6 +165,9 @@ export class Smge {
 		setInterval(() => {
 			this.update();
 		}, 1000 / 60);
+		if (this.on_start && 'function' == typeof this.on_start) {
+			this.on_start();
+		}
 		let requestAnimationFrame =
 			window.requestAnimationFrame ||
 			window.webkitRequestAnimationFrame ||
