@@ -3,23 +3,13 @@
 import { Transform } from './transform.js';
 
 export class Sprite {
-	constructor (image, offset_x, offset_y) {
+	constructor (image, origin_x, origin_y) {
 		this.image;
 		this.set_image(image);
 		this.origin = {
-			x: 0,
-			y: 0,
+			x: origin_x || 0,
+			y: origin_y || 0,
 		};
-		this.offset = {
-			x: 0,
-			y: 0,
-		};
-		if (offset_x) {
-			this.offset.x = offset_x;
-		}
-		if (offset_y) {
-			this.offset.y = offset_y;
-		}
 	}
 	on_add() {
 		this.parent.sprite = this;
