@@ -6,68 +6,87 @@ import { Cover } from './cover.js';
 export class Scene extends GameObject {
 	constructor(smge, options) {
 		super(smge);
-		this.source_object = options.source_object || null;
-		this.disable_source_object = options.disable_source_object || false;
-		this.remove_source_object = options.remove_source_object || false;
-		this.cover_color = options.cover_color || '#000000';
-		this.cover_type_in = options.cover_type_in || 'cut';
-		this.cover_duration_in = options.cover_duration_in || '1';
-		this.cover_type_out = options.cover_type_out || 'cut';
-		this.cover_duration_out = options.cover_duration_out || '1';
-		this.min_cover_duration = options.min_cover_duration || '1';
 		this.loaded = false;
-		this.compose_ready = false;
+		this.covered = false;
 		this.composed = false;
-		// begin loading resources immediately
+		this.options = options || {};
+		this.cover = null;
+	}
+	/** /
+	transition(source_object, remove_source_object, cb) {
+	/**/
+	transition(source_object, remove_source_object) {
 		this.load();
-		// load transition cover immediately
-		this.cover = new Cover(this.smge, this.cover_color);
+
+		source_object = source_object || null;
+		remove_source_object = remove_source_object || false;
+
+		let cover_color = this.options.cover_color || '#000000';
+		let cover_type_in = this.options.cover_type_in || 'cut';
+		let cover_duration_in = this.options.cover_duration_in || 1;
+		this.cover_type_out = this.options.cover_type_out || 'cut';
+		this.cover_duration_out = this.options.cover_duration_out || 1;
+		this.min_cover_duration = this.options.min_cover_duration || 1;
+
+		if (this.cover) {
+			this.remove_module(this.cover);
+		}
+		this.cover = new Cover(this.smge, cover_color);
 		this.cover.change_layer(2048);
 		this.add_module(this.cover);
+		console.log('scene start cover in');
 		this.cover.in(
-			this.cover_type_in,
-			this.cover_duration_in,
-			// after cover is in set ready to compose
+			cover_type_in,
+			cover_duration_in,
+			// after cover is in set covered
 			() => {
-				if (this.source_object) {
-					if (this.disable_source_object) {
-						this.source_object.disable();
+				console.log('scene finish cover in');
+				/** /
+				// run auxillary callback if specified
+				if (cb && 'function' == typeof cb) {
+					cb(this);
+				}
+				/**/
+				// disable or remove source object if requested
+				if (source_object) {
+					if (remove_source_object) {
+						this.smge.entity_manager.remove(source_object);
+						source_object = null;
 					}
-					if (this.remove_source_object) {
-						this.smge.entity_manager.remove(this.source_object);
-						this.source_object = null;
+					else {
+						source_object.disable();
 					}
 				}
-				this.compose_ready = true;
+				console.log('scene set covered');
+				this.covered = true;
 			}
 		);
+	}
+	update() {
+		super.update();
+		if (this.loaded && this.covered && !this.composed) {
+			this.compose();
+		}
 	}
 	load() {
 		this.loaded = true;
 	}
-	update() {
-		super.update();
-		if (this.loaded && this.compose_ready && !this.composed) {
-			this.compose();
+	clean() {
+		console.log('scene clean');
+		for (let i in this.modules) {
+			this.remove_module(this.modules[i]);
 		}
 	}
 	compose() {
 		this.composed = true;
-		if (!this.min_cover_duration) {
-			this.cover.out(
-				this.cover_type_out,
-				this.cover_duration_out,
-				() => {
-					this.remove_module(this.cover);
-				}
-			);
-			return;
-		}
+		console.log('scene waiting min duration: ' + this.min_cover_duration + ' before starting cover out');
 		this.smge.add_waiting_action(() => {
+			console.log('scene start cover out');
 			this.cover.out(
 				this.cover_type_out,
 				this.cover_duration_out,
 				() => {
+					console.log('scene finish cover out');
 					this.remove_module(this.cover);
 				}
 			);
