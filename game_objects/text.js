@@ -179,7 +179,7 @@ export class Text extends GameObject {
 		}
 		// remove remaining glyphs in old glyph list
 		while (index < this.glyphs.length) {
-			this.glyphs[this.glyphs.length - 1].prune = true;
+			this.remove_module(this.glyphs[this.glyphs.length - 1]);
 			this.glyphs.splice(this.glyphs.length - 1, 1);
 		}
 		// remove spacing from end of line
