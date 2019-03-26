@@ -12,6 +12,7 @@ import { EntityManager } from './entity_manager.js';
 import { ResourceManager } from './resource_manager.js';
 import { BoundManager } from './bound_manager.js';
 import { AudioPlayer } from './audio_player.js';
+import './lib/math_clamp.js';
 
 export class Smge {
 	constructor(options) {
