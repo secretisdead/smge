@@ -55,6 +55,9 @@ export class Bound {
 		}
 		this.parent.bounds.push(this);
 	}
+	refresh() {
+		this.last.x = null;
+	}
 }
 
 export class BoundManager {
