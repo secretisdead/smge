@@ -41,6 +41,9 @@ export class GameObject {
 		return module;
 	}
 	remove_module(module) {
+		if (!module) {
+			return;
+		}
 		module.prune = true;
 		let i = this.modules.indexOf(module);
 		if (-1 == i) {
