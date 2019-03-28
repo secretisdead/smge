@@ -98,4 +98,17 @@ export class Timer {
 		this.percent.remaining = 1;
 		this.stopped = false;
 	}
+	reverse() {
+		if (this.stopped) {
+			this.remaining = this.duration;
+			this.percent.complete = 0;
+			this.percent.remaining = 1;
+			this.stopped = false;
+		}
+		else {
+			this.remaining = this.duration - this.remaining;
+			this.percent.remaining = this.remaining / this.duration;
+			this.percent.complete = 1 - this.percent.remaining;
+		}
+	}
 }
