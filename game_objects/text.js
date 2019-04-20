@@ -266,6 +266,53 @@ export class Text extends GameObject {
 			}
 		//}
 	}
+	static wrap(text, font, max_width) {
+		console.log('wrapping text at ' + max_width);
+		if (!max_width) {
+			max_length = 128;
+		}
+		let new_text = '';
+		let current_line_width = 0;
+		let i = 0;
+		while (i < text.length) {
+			if ('\\' == text[i]) {
+				let code = text[i + 1];
+				i += 2;
+				// manual newline
+				if ('n' == code) {
+					new_text += '\\n';
+					current_line_width = 0;
+				}
+				else {
+					// advance past begin control quote
+					i += 1;
+					let value_end_pos = text.substring(i).find('"');
+					let value = text.substring(i, i + value_end_pos);
+					// move control code and value into new text
+					new_text += code + '"' + value + '"';
+					// advance past end control quote
+					i += 1;
+				}
+			}
+			else {
+				//TODO should be a while to catch multi-word overflow? with a check to prevent infinite loop
+				if (current_line_width >= max_width) {
+					// replace last space in new text with newline
+					let last_space_pos = new_text.lastIndexOf(' ');
+					let remaining_line_text = new_text.substring(last_space_pos + 1);
+					new_text = new_text.substring(0, last_space_pos) + '\\n' + remaining_line_text;
+					current_line_width = 0;
+					for (let j = 0; j < remaining_line_text.length; j++) {
+						current_line_width += font.glyphs[remaining_line_text[j]].width + font.spacing.x;
+					}
+				}
+				new_text += text[i];
+				current_line_width += font.glyphs[text[i]].width + font.spacing.x;
+				i += 1;
+			}
+		}
+		return new_text;
+	}
 }
 // for visual effects on glyphs
 // their transforms are moved to the affected position in early_draw
