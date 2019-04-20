@@ -18,6 +18,19 @@ export class Transform {
 		};
 		this.resistance = 0;
 		this.max_velocity = -1;
+		this.percent = 1;
+		this.source = {
+			x: 0,
+			y: 0
+		};
+		this.destination = {
+			x: 0,
+			y: 0
+		};
+		this.distance = {
+			x: 0,
+			y: 0
+		};
 		//TODO is building parallax into transform what i really want?
 		// parallax multiple, where 0 overlays the screen treating x and y as canvas coordinates,
 		// between 0 and 1 moves slower as if in background,
@@ -93,6 +106,40 @@ export class Transform {
 		return Math.sqrt(Math.pow(this.x - x, 2) + Math.pow(this.y - y, 2));
 	}
 	move_to(x, y, duration) {
-		//TODO
+		if (!duration) {
+			this.x = x;
+			this.y = y;
+			return;
+		}
+		this.duration = duration;
+		this.elapsed = 0;
+		this.percent = 0;
+		this.source = {
+			x: this.x,
+			y: this.y
+		};
+		this.destination = {
+			x: x,
+			y: y
+		};
+		this.distance = {
+			x: x - this.x,
+			y: y - this.y
+		};
+	}
+	update() {
+		if (1 == this.percent) {
+			return;
+		}
+		this.elapsed += this.parent.timescale.delta;
+		this.percent = this.elapsed / this.duration;
+		if (1 <= this.percent) {
+			this.percent = 1;
+			this.x = this.destination.x;
+			this.y = this.destination.y;
+			return;
+		}
+		this.x = this.source.x + (this.percent * this.distance.x);
+		this.y = this.source.y + (this.percent * this.distance.y);
 	}
 }
