@@ -30,6 +30,10 @@ export class Transform {
 		};
 	}
 	apply_velocity() {
+		if (0 > this.parent.timescale.delta) {
+			console.log('negative delta time when applying transform velocity');
+			return;
+		}
 		if (0 != this.acceleration.x) {
 			this.velocity.x += (this.acceleration.x * this.parent.timescale.delta);
 		}
