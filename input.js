@@ -138,6 +138,12 @@ export class Input {
 			if (!this.attached) {
 				return;
 			}
+			// touch start as mouse1 down
+			if (-1 == this.state.current.indexOf('m1')
+			) {
+				this.state.current.push('m1');
+			}
+			// touch movement
 			this.cursor.screen.x = Math.clamp(
 				e.touches[0].pageX - this.screen.display.canvas.offsetLeft,
 				0,
@@ -171,7 +177,13 @@ export class Input {
 			if (!this.attached) {
 				return;
 			}
-			let index = this.state.current.indexOf('touch');
+			// touch end as m1 up
+			let index = this.state.current.indexOf('m1');
+			if (-1 != index) {
+				this.state.current.splice(index, 1);
+			}
+			// touch end as touch up
+			index = this.state.current.indexOf('touch');
 			if (-1 != index) {
 				this.state.current.splice(index, 1);
 			}
