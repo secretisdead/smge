@@ -54,7 +54,7 @@ export class Transform {
 			this.velocity.y += (this.acceleration.y * this.parent.timescale.delta);
 		}
 		if (
-			-1 < this.max_vVelocity
+			-1 < this.max_velocity
 			&& this.max_velocity < Math.sqrt(
 				Math.pow(this.velocity.x, 2) + Math.pow(this.velocity.y, 2)
 			)
