@@ -3,9 +3,9 @@
 import { Transform } from './transform.js';
 
 export class Sprite {
-	constructor (image, origin_x, origin_y) {
+	constructor (image, origin_x, origin_y, sx, sy, width, height) {
 		this.image;
-		this.set_image(image);
+		this.set_image(image, sx, sy, width, height);
 		this.origin = {
 			x: origin_x || 0,
 			y: origin_y || 0,
@@ -17,9 +17,31 @@ export class Sprite {
 			this.parent.add_module(new Transform);
 		}
 	}
-	set_image(image) {
+	static image_from_spritesheet(spritesheet, sx, sy, width, height) {
+		let c = document.createElement('canvas');
+		c.width = width;
+		c.height = height;
+		let ctx = c.getContext('2d');
+		ctx.drawImage(
+			spritesheet,
+			sx,
+			sy,
+			width,
+			height,
+			0,
+			0,
+			width,
+			height
+		);
+		return c;
+	}
+	set_image(image, sx, sy, width, height) {
 		if (!image) {
 			return;
+		}
+		// cutting from spritesheet
+		if (width && height) {
+			image = Sprite.image_from_spritesheet(image, sx, sy, width, height);
 		}
 		this.image = image;
 		this.width = this.image.width;
