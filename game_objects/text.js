@@ -122,6 +122,9 @@ export class Text extends GameObject {
 				continue;
 			}
 			let current_glyph = this.text.charAt(i);
+			if (!this.font.glyphs[current_glyph]) {
+				current_glyph = '?';
+			}
 			line_width += this.font.glyphs[current_glyph].width + this.font.spacing.x;
 			// previous glyph at this index didn't exist
 			if (!this.glyphs[index]) {
