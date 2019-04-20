@@ -217,6 +217,7 @@ export class Text extends GameObject {
 				break;
 		}
 		this.update();
+		this.set_glyph_coordinates();
 	}
 	update() {
 		super.update();
@@ -234,6 +235,9 @@ export class Text extends GameObject {
 		}
 		this.last.x = this.transform.x;
 		this.last.y = this.transform.y;
+		this.set_glyph_coordinates();
+	}
+	set_glyph_coordinates() {
 		// go through all glyphs and set their coordinates based on this text's alignment
 		// now that we know the origin of the text block
 		let left_edge = this.transform.x + this.origin.x;
