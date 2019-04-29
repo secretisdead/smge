@@ -83,6 +83,9 @@ export class Smge {
 		this.bound_manager = new BoundManager(this);
 		// audio player
 		this.audio = new AudioPlayer();
+		// for stopping
+		this.stopped = false;
+		this.interval = null;
 		// for initialization, especially when click to start is enabled
 		this.on_start = null;
 		// a standard place for user globals
@@ -128,6 +131,12 @@ export class Smge {
 		// update entities
 		this.entity_manager.update();
 	};
+	stop() {
+		this.stopped = true;
+		if (this.interval) {
+			clearInterval(this.interval());
+		}
+	}
 	start() {
 		if (!this.require_click_to_start) {
 			this._start();
@@ -164,6 +173,9 @@ export class Smge {
 		}
 		this.start_time = new Date().getTime();
 		setInterval(() => {
+			if (this.stopped) {
+				return;
+			}
 			this.update();
 		}, 1000 / 60);
 		if (this.on_start && 'function' == typeof this.on_start) {
@@ -175,10 +187,13 @@ export class Smge {
 			window.mozRequestAnimationFrame ||
 			false;
 		if (!requestAnimationFrame) {
-			setInterval(this.entity_manager.draw, 1000 / 60);
+			this.interval = setInterval(this.entity_manager.draw, 1000 / 60);
 			return;
 		}
 		let cb = () => {
+			if (this.stopped) {
+				return;
+			}
 			this.entity_manager.draw();
 			requestAnimationFrame(cb)
 		};
