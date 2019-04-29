@@ -28,7 +28,7 @@ export class Cover extends GameObject {
 			|| screen_height != this.canvas.height
 		) {
 			this.canvas.width = screen_width;
-			this.canvas.width = screen_height;
+			this.canvas.height = screen_height;
 		}
 		// rect covers
 		if (-1 != [
