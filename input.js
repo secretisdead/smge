@@ -134,6 +134,16 @@ export class Input {
 			) / this.screen.scale.y;
 			// console.log('unlocked mouse at screen ' + this.cursor.screen.x + ',' + this.cursor.screen.y);
 		});
+		let supports_passive = false;
+		try {
+			let opts = Object.defineProperty({}, 'passive', {
+				get: function() {
+					supports_passive = true;
+				}
+			});
+			window.addEventListener('testPassive', null, opts);
+			window.removeEventListener('testPassive', null, opts);
+		} catch (e) {}
 		this.screen.display.canvas.addEventListener('touchstart', e => {
 			if (!this.attached) {
 				return;
@@ -154,10 +164,11 @@ export class Input {
 				0,
 				this.screen.display.canvas.height
 			) / this.screen.scale.y;
+			// touch start as touch down
 			if (-1 == this.state.current.indexOf('touch')) {
 				this.state.current.push('touch');
 			}
-		});
+		}, supports_passive ? {passive: true} : false);
 		this.screen.display.canvas.addEventListener('touchmove', e => {
 			if (!this.attached) {
 				return;
@@ -172,7 +183,7 @@ export class Input {
 				0,
 				this.screen.display.canvas.height
 			) / this.screen.scale.y;
-		});
+		}, supports_passive ? {passive: true} : false);
 		this.screen.display.canvas.addEventListener('touchend', e => {
 			if (!this.attached) {
 				return;
