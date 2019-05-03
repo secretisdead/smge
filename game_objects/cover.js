@@ -15,12 +15,7 @@ export class Cover extends GameObject {
 		this.type = 'wipe_right';
 		this.timer = new Timer();
 	}
-	update() {
-		super.update();
-		if (this.timer.stopped) {
-			return;
-		}
-		this.timer.check_stop(this.timescale.delta);
+	fill_canvas() {
 		let screen_width = this.smge.screen.buffer.canvas.width;
 		let screen_height = this.smge.screen.buffer.canvas.height;
 		if (
@@ -144,6 +139,14 @@ export class Cover extends GameObject {
 		//TODO diagonal wipes?
 		//TODO iris wipes?
 	}
+	update() {
+		super.update();
+		if (this.timer.stopped) {
+			return;
+		}
+		this.timer.check_stop(this.timescale.delta);
+		this.fill_canvas();
+	}
 	in(type, duration, cb) {
 		console.log('starting cover in, type: ' + type + ', duration: ' + duration);
 		this.mode = 'in';
@@ -161,5 +164,9 @@ export class Cover extends GameObject {
 	late_draw() {
 		// composite cover canvas onto screen buffer
 		this.smge.screen.buffer.ctx.drawImage(this.canvas, 0, 0);
+	}
+	change_color(color) {
+		this.color = color;
+		this.fill_canvas();
 	}
 }
