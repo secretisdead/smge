@@ -10,7 +10,10 @@ export class Scene extends GameObject {
 		this.covered = false;
 		this.composed = false;
 		this.options = options || {};
-		this.cover = null;
+		this.cover = new Cover(this.smge, this.options.cover_color || '#000000');
+		this.cover.change_layer(2048);
+		this.add_module(this.cover);
+		this.callbacks = null;
 	}
 	transition(source_object, remove_source_object, callbacks) {
 		this.load();
@@ -18,7 +21,6 @@ export class Scene extends GameObject {
 		source_object = source_object || null;
 		remove_source_object = remove_source_object || false;
 
-		let cover_color = this.options.cover_color || '#000000';
 		let cover_type_in = this.options.cover_type_in || 'cut';
 		let cover_duration_in = this.options.cover_duration_in || 1;
 		this.cover_type_out = this.options.cover_type_out || 'cut';
@@ -30,23 +32,23 @@ export class Scene extends GameObject {
 			cover_out: null,
 		};
 		if (callbacks) {
+			if (callbacks.cover_in_start) {
+				this.callbacks.cover_in_start = callbacks.cover_in_start;
+			}
 			if (callbacks.cover_in) {
 				this.callbacks.cover_in = callbacks.cover_in;
 			}
 			if (callbacks.composed) {
 				this.callbacks.composed = callbacks.composed;
 			}
+			if (callbacks.cover_out_start) {
+				this.callbacks.cover_out_start = callbacks.cover_out_start;
+			}
 			if (callbacks.cover_out) {
-				this.callbacks.composed = callbacks.cover_out;
+				this.callbacks.cover_out = callbacks.cover_out;
 			}
 		}
 
-		if (this.cover) {
-			this.remove_module(this.cover);
-		}
-		this.cover = new Cover(this.smge, cover_color);
-		this.cover.change_layer(2048);
-		this.add_module(this.cover);
 		console.log('scene start cover in');
 		this.cover.in(
 			cover_type_in,
@@ -58,12 +60,6 @@ export class Scene extends GameObject {
 					console.log('cover in callback provided, running now');
 					this.callbacks.cover_in(this);
 				}
-				/** /
-				// run auxillary callback if specified
-				if (cb && 'function' == typeof cb) {
-					cb(this);
-				}
-				/**/
 				// disable or remove source object if requested
 				if (source_object) {
 					if (remove_source_object) {
@@ -102,6 +98,10 @@ export class Scene extends GameObject {
 		}
 		console.log('scene waiting min duration: ' + this.min_cover_duration + ' before starting cover out');
 		this.smge.add_waiting_action(() => {
+			if (this.callbacks.cover_out_start) {
+				console.log('cover out start callback provided, running now');
+				this.callbacks.cover_out_start(this);
+			}
 			console.log('scene start cover out');
 			this.cover.out(
 				this.cover_type_out,
