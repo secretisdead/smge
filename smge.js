@@ -71,6 +71,7 @@ export class Smge {
 		};
 		// waiting actions
 		this.waiting_actions = [];
+		this.delayed_waiting_actions = [];
 		// screen
 		this.screen = new Screen(options);
 		// input
@@ -123,6 +124,25 @@ export class Smge {
 				this.waiting_actions[i]();
 			}
 			this.waiting_actions = [];
+		}
+		// actions waiting for a timescale-based delay
+		if (0 < this.delayed_waiting_actions.length) {
+			let delayed_waiting_actions_to_remove = [];
+			for (let i in this.delayed_waiting_actions) {
+				let waiting_action = this.delayed_waiting_actions[i];
+				waiting_action.delay -= waiting_action.timescale.delta;
+				if (0 >= waiting_action.delay) {
+					waiting_action.cb();
+					delayed_waiting_actions_to_remove.push(waiting_action);
+				}
+			}
+			for (let i in delayed_waiting_actions_to_remove) {
+				let waiting_action = delayed_waiting_actions_to_remove[i];
+				this.delayed_waiting_actions.splice(
+					this.delayed_waiting_actions.indexOf(waiting_action),
+					1
+				);
+			}
 		}
 		// prune
 		this.entity_manager.prune();
@@ -203,11 +223,19 @@ export class Smge {
 		this.entity_manager.remove_by_tag(tag);
 		this.resource_manager.remove_by_tag(tag);
 	}
-	add_waiting_action(cb, delay) {
+	add_waiting_action(cb, delay, timescale) {
 		if (!delay) {
 			this.waiting_actions.push(cb);
 			return;
 		}
-		setTimeout(cb, delay);
+		if (!timescale) {
+			setTimeout(cb, delay);
+			return;
+		}
+		this.delayed_waiting_actions.push({
+			delay: delay,
+			timescale: timescale,
+			cb: cb,
+		});
 	}
 }
