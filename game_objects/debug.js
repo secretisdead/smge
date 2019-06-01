@@ -6,8 +6,8 @@ export class Debug extends GameObject {
 	constructor(smge, toggle_key) {
 		super(smge);
 		this.toggle_key = toggle_key;
-		this.layer = 2048;
-		this.depth = 2048;
+		this.layer = 4056;
+		this.depth = 4056;
 		this.enabled = false;
 		this.colors = {
 			fps: '#808080',
